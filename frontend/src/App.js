@@ -7,6 +7,7 @@ import QuestionTracker from './QuestionTracker';
 import TextSpeech from './components/Speech';
 import { Home } from 'lucide-react';
 import HomePage from './Home';
+import ResumeBuilder from './ResumeBuilder'
 const App = () => {
   return (
     <Router>
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/tracker" element={<QuestionTracker />} />
         <Route path="/speech" element={<TextSpeech />} />
         <Route path="/home" element={<HomePage/>} />
+        <Route path="/resume-builder" element={<ResumeBuilder/>} />
 
       </Routes>
     </Router>

@@ -10,7 +10,10 @@ const Upload = () => {
     const [noskill, setnoSkill] = useState(false);
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [daysUntilInterview, setDaysUntilInterview] = useState("");
+    const [interviewDateSubmitted, setInterviewDateSubmitted] = useState(false);
     const navigate = useNavigate();
+    
     const cleanAIResponse = (text) => {
         return text
             .replace(/\*/g, "")
@@ -23,9 +26,29 @@ const Upload = () => {
         setFile(e.target.files[0]);
     };
 
+    const handleDaysInputChange = (e) => {
+        setDaysUntilInterview(e.target.value);
+    };
+
+    const handleDaysSubmit = (e) => {
+        e.preventDefault();
+        if (daysUntilInterview) {
+            setInterviewDateSubmitted(true);
+            // You could also store this in localStorage if needed
+            localStorage.setItem('daysUntilInterview', daysUntilInterview);
+        } else {
+            alert("Please enter the number of days until your interview");
+        }
+    };
+
     const handleUpload = async () => {
         if (!file) {
             alert("Please upload a resume first!");
+            return;
+        }
+
+        if (!interviewDateSubmitted) {
+            alert("Please enter how many days are remaining for your interview first!");
             return;
         }
 
@@ -33,6 +56,7 @@ const Upload = () => {
 
         const formData = new FormData();
         formData.append("resume", file);
+        formData.append("daysUntilInterview", daysUntilInterview); // Send days info to backend
 
         try {
             const response = await axios.post("http://localhost:5001/upload", formData, {
@@ -65,13 +89,16 @@ const Upload = () => {
         try {
             const response = await axios.post('http://localhost:5001/api/questions/save', {
                 userId,
-                questions
+                questions,
+                daysUntilInterview // Include interview countdown when saving
             });
 
             if (response.status === 201) {
                 localStorage.setItem('savedQuestions', true);
+                localStorage.setItem('daysRemaining',daysUntilInterview);
                 navigate('/tracker')
             }
+
         } catch (error) {
             console.error('Error saving questions:', error);
             alert("Failed to save questions. Please try again.");
@@ -107,6 +134,72 @@ const Upload = () => {
                         <h3 className="text-xl font-semibold text-gray-700">Upload Your Resume</h3>
                         <p className="text-gray-500 mt-2">Get tailored interview questions based on your skills</p>
                     </div>
+
+                    {/* Interview Days Countdown Input */}
+                    {!interviewDateSubmitted ? (
+                        <div className="interview-countdown mb-8">
+                            <div className="bg-blue-50 p-6 rounded-xl border border-blue-100 shadow-sm">
+                                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Interview Timeline
+                                </h3>
+                                <form onSubmit={handleDaysSubmit} className="space-y-4">
+                                    <div>
+                                        <label htmlFor="daysUntilInterview" className="block text-sm font-medium text-gray-700 mb-1">
+                                            How many days are remaining for your interview?
+                                        </label>
+                                        <input
+                                            type="number"
+                                            id="daysUntilInterview"
+                                            min="0"
+                                            value={daysUntilInterview}
+                                            onChange={handleDaysInputChange}
+                                            placeholder="Enter number of days"
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-200"
+                                            required
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors duration-300 shadow-md flex items-center justify-center font-medium"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                        </svg>
+                                        Confirm
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="interview-countdown-display mb-8">
+                            <div className="bg-green-50 p-4 rounded-xl border border-green-100 shadow-sm flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <div>
+                                    <h3 className="font-medium text-gray-800">Interview Timeline</h3>
+                                    <p className="text-green-700">
+                                        {daysUntilInterview === "0" 
+                                            ? "Your interview is today!" 
+                                            : daysUntilInterview === "1" 
+                                                ? "Your interview is tomorrow!" 
+                                                : `${daysUntilInterview} days remaining until your interview`}
+                                    </p>
+                                </div>
+                                <button 
+                                    className="ml-auto text-blue-600 hover:text-blue-800"
+                                    onClick={() => setInterviewDateSubmitted(false)}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="file-upload mb-8">
                         <div className="border-2 border-dashed border-blue-200 rounded-xl p-6 bg-blue-50 hover:bg-blue-100 transition-all duration-300 cursor-pointer">
@@ -184,58 +277,58 @@ const Upload = () => {
                         </div>
                     )}
 
-{questions && !noskill && (
-    <div className="questions-section bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100 shadow-sm transition-all duration-500 animate-fadeIn">
-        <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Interview Questions
-        </h3>
-        <div className="space-y-4 mb-6">
-            {questions.split("\n").map((question, index) => (
-                <div 
-                    key={index} 
-                    className="bg-white p-5 rounded-lg border-l-4 border-indigo-500 shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
-                >
-                    <div className="flex items-start">
-                        <div className="flex-shrink-0 mr-4">
-                            <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white font-semibold text-sm shadow-md">
-                                {index + 1}
+                    {questions && !noskill && (
+                        <div className="questions-section bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100 shadow-sm transition-all duration-500 animate-fadeIn">
+                            <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Interview Questions
+                            </h3>
+                            <div className="space-y-4 mb-6">
+                                {questions.split("\n").map((question, index) => (
+                                    <div 
+                                        key={index} 
+                                        className="bg-white p-5 rounded-lg border-l-4 border-indigo-500 shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                                    >
+                                        <div className="flex items-start">
+                                            <div className="flex-shrink-0 mr-4">
+                                                <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white font-semibold text-sm shadow-md">
+                                                    {index + 1}
+                                                </div>
+                                            </div>
+                                            <div className="text-gray-700 font-medium">
+                                                {question.trim()}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        </div>
-                        <div className="text-gray-700 font-medium">
-                            {question.trim()}
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </div>
 
-        <button 
-            className={`${saving ? 'bg-green-400 cursor-wait' : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'} text-white py-3 px-6 rounded-lg transition-all duration-300 shadow-md w-full flex items-center justify-center font-medium`}
-            onClick={handleSaveQuestions}
-            disabled={saving}
-        >
-            {saving ? (
-                <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Saving Questions...
-                </>
-            ) : (
-                <>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
-                    </svg>
-                    Start Practicing Answers
-                </>
-            )}
-        </button>
-    </div>
-)}
+                            <button 
+                                className={`${saving ? 'bg-green-400 cursor-wait' : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'} text-white py-3 px-6 rounded-lg transition-all duration-300 shadow-md w-full flex items-center justify-center font-medium`}
+                                onClick={handleSaveQuestions}
+                                disabled={saving}
+                            >
+                                {saving ? (
+                                    <>
+                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Saving Questions...
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+                                        </svg>
+                                        Start Practicing Answers
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    )}
                     {noskill && (
                         <div className="no-skills-message bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-5 rounded-lg mb-6 flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-yellow-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">

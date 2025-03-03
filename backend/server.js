@@ -76,8 +76,9 @@ async function generateInterviewQuestions(skills) {
         const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
-        const prompt = `Generate 15 to 20 interview questions for a candidate skilled in ${skills}. 
+        const prompt = `Generate 15 to 20 interview questions for a candidate skilled in ${skills}.
 Follow these strict rules:
+
 1. Return ONLY the questions, one per line
 2. NO numbers/bullets before questions
 3. NO topic headers or categories

@@ -107,7 +107,7 @@ const getQuestions = async (req, res) => {
 
 const evaluateAnswer = async (req, res) => {
     try {
-        const { question, answer, userId } = req.body;
+        const { question, answer, userId ,x} = req.body;
         
         // Input validation
         if (!question || !answer || !userId) {
@@ -122,19 +122,20 @@ const evaluateAnswer = async (req, res) => {
 
         // Simplified prompt with clear structure
         const prompt = 
-            "You are an expert interviewer evaluating my answer. " +
-            "Provide a constructive and specific evaluation based on: clarity, technical accuracy, completeness, " +
-            "professional communication, and practical understanding.\n\n" +
-            `Question: ${question}\n` +
-            `Answer: ${answer}\n\n` +
-            "Format your response as ONLY a JSON object with these exact fields:\n" +
-            "{\n" +
-            "  \"score\": (a number between 1-10),\n" +
-            "  \"feedback\": \"overall feedback here\",\n" +
-            "  \"strengths\": \"key strengths here\",\n" +
-            "  \"improvement_areas\": \"areas to improve here\"\n" +
-            "}\n" +
-            "Ensure your response contains ONLY this JSON object with no additional text.";
+           "You are an expert interviewer evaluating my answer. " + 
+"Provide a constructive and specific evaluation based on: clarity, technical accuracy, completeness, " + 
+`professional communication, and practical understanding. The user's interview is in ${x} days.\n\n` + 
+`Question: ${question}\n` + 
+`Answer: ${answer}\n\n` + 
+"Format your response as ONLY a JSON object with these exact fields:\n" + 
+"{\n" + 
+"  \"score\": (a number between 1-10),\n" + 
+"  \"feedback\": \"overall feedback here\",\n" + 
+"  \"strengths\": \"key strengths here\",\n" + 
+"  \"improvement_areas\": \"areas to improve here\",\n" + 
+"  \"preparation_plan\": \"specific advice on how to prepare in the remaining " + x + " days before the interview\"\n" + 
+"}\n" + 
+"Ensure your response contains ONLY this JSON object with no additional text. In the preparation_plan field, provide tailored advice based on the time remaining and the specific areas that need improvement."
 
         const result = await model.generateContent(prompt);
         const responseText = result.response.text();
