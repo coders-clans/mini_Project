@@ -143,7 +143,7 @@ const evaluateAnswer = async (req, res) => {
         // Clean the response text before parsing
         const cleanedResponse = responseText
             .trim()
-            .replace(/```json\s*|\s*```/g, '') // Remove any markdown code blocks
+            .replace(/```json\s*|\s*```/g, '') // Removing markdown code blocks
             .replace(/^\s*{\s*/, '{')  // Clean up starting brackets
             .replace(/\s*}\s*$/, '}'); // Clean up ending brackets
 
