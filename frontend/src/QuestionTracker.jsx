@@ -11,7 +11,7 @@ const QuestionTracker = () => {
     const [error, setError] = useState(null);
     const [answers, setAnswers] = useState({});
     const navigate = useNavigate();
-
+   const x = localStorage.getItem('daysRemaining');
     useEffect(() => {
         const fetchQuestions = async () => {
             try {

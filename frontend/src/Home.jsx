@@ -1,75 +1,89 @@
-import React, { useState,useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 const HomePage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
-  // Mock interview questions for personality development
-  const interviewQuestions = [
-    {
-      id: 1,
-      question: "Tell me about yourself",
-      tips: "Focus on professional background, key achievements, and relevance to the role."
-    },
-    {
-      id: 2,
-      question: "What are your greatest strengths?",
-      tips: "Highlight 2-3 strengths with concrete examples that relate to the job."
-    },
-    {
-      id: 3,
-      question: "How do you handle stress and pressure?",
-      tips: "Describe specific strategies and provide an example of overcoming a stressful situation."
-    }
-  ];
-
-  const [isold,setisOld] = useState(false);
-  useEffect(() => {
-    const fetchQuestions = async () => {
-        try {
-            const userId = localStorage.getItem('userId');
-            const response = await axios.get(`http://localhost:5001/api/questions/questions/${userId}`);
-
-            let questionsList = response.data.data.questions;
-            if(questionsList){
-                setisOld(true);
-            }
-        } catch (err) {
-            console.error('Error fetching questions:', err);
-        }
-    };
-    fetchQuestions();
-}, []);
-
-  // Body language tips with image placeholders
   const bodyLanguageTips = [
     {
       id: 1,
-      title: "Maintain Eye Contact",
-      description: "Establish trust and confidence by maintaining appropriate eye contact. Look at the interviewer when speaking and listening, but avoid staring.",
-      image: "/api/placeholder/300/200"
+      title: "Eye Contact Mastery",
+      description: "Maintain natural eye contact to build trust and show confidence. Aim for 60-70% eye contact during conversations.",
+      image: "/images/eye-contact.jpg",
+      path: "/tips/eye-contact-mastery"
     },
     {
       id: 2,
-      title: "Open Posture",
-      description: "Keep arms uncrossed and shoulders relaxed to appear approachable. Lean slightly forward to show engagement and interest in the conversation.",
-      image: "/api/placeholder/300/200"
+      title: "Power Posture",
+      description: "Stand tall with shoulders back and head high. Good posture signals confidence and helps you appear more authoritative.",
+      image: "/images/posture.jpg",
+      path: "/tips/power-posture"
     },
     {
       id: 3,
-      title: "Confident Handshake",
-      description: "A firm handshake conveys confidence and professionalism. Practice a medium-grip handshake that's neither too limp nor too forceful.",
-      image: "/api/placeholder/300/200"
+      title: "Purposeful Gestures",
+      description: "Use deliberate hand movements to emphasize points. Open palms suggest honesty while pointing can appear aggressive.",
+      image: "/images/gestures.jpg",
+      path: "/tips/purposeful-gestures"
+    },
+    {
+      id: 4,
+      title: "Strategic Mirroring",
+      description: "Subtly match the other person's posture and gestures to build rapport. This technique creates unconscious connection.",
+      image: "/images/mirroring.jpg",
+      path: "/tips/strategic-mirroring"
+    },
+    {
+      id: 5,
+      title: "Facial Expressions",
+      description: "Be mindful of your expressions as they reveal emotions. A genuine smile engages your eyes and creates instant connection.",
+      image: "/images/facial-expressions.jpg",
+      path: "/tips/facial-expressions"
+    },
+    {
+      id: 6,
+      title: "Proximity & Space",
+      description: "Respect personal space (typically 18-24 inches). Moving closer signals intimacy, while stepping back creates psychological distance.",
+      image: "/images/proximity.jpg",
+      path: "/tips/proximity-and-space"
     }
   ];
 
+  const [isold, setisOld] = useState(false);
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const userId = localStorage.getItem('userId');
+        const response = await axios.get(`http://localhost:5001/api/questions/questions/${userId}`);
+
+        let questionsList = response.data.data.questions;
+        if (questionsList) {
+          setisOld(true);
+        }
+      } catch (err) {
+        console.error('Error fetching questions:', err);
+      }
+    };
+    fetchQuestions();
+  }, []);
 
 
-const handletracker  = ()=>{
-  navigate('/tracker')
-}
- 
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("savedQuestions");
+    localStorage.removeItem("userId");
+    navigate('/login')
+  }
+
+  const handletracker = () => {
+    navigate('/tracker')
+  }
+
+  const handleCreateResume = () => {
+    navigate('/resume-builder')
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
@@ -77,20 +91,20 @@ const handletracker  = ()=>{
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <span className="text-xl font-bold">CareerBoost</span>
+              <span className="text-xl font-bold">SkillCraft</span>
             </div>
-            
+
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-4">
               <a href="#" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition">Home</a>
               <a href="#" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition">About</a>
               <button onClick={handletracker} className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition">Track</button>
-              <a href="#" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition">Contact</a>
+              <button onClick={handleLogout} className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition">Logout</button>
             </div>
-            
+
             {/* Mobile menu button */}
             <div className="md:hidden flex items-center">
-              <button 
+              <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="inline-flex items-center justify-center p-2 rounded-md hover:bg-blue-500 focus:outline-none"
               >
@@ -101,20 +115,20 @@ const handletracker  = ()=>{
             </div>
           </div>
         </div>
-        
+
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500">Home</a>
               <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500">About</a>
-              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500">Services</a>
-              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500">Contact</a>
+              <button onClick={handletracker} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500">Track</button>
+              <button onClick={handleLogout} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500">Logout</button>
             </div>
           </div>
         )}
       </nav>
-      
+
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-100 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -127,17 +141,24 @@ const handletracker  = ()=>{
                 Prepare for your dream job with expert interview tips, personality development resources, and career guidance.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                {/* <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition shadow-lg">
-                  Get Started
-                </button> */}
-                
                 {/* Resume Upload Button */}
-                <label className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition shadow-lg flex items-center justify-center" onClick={isold? (()=>navigate('/tracker')):(()=>navigate('/upload'))}>
+                <label className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition shadow-lg flex items-center justify-center" onClick={isold ? (() => navigate('/tracker')) : (() => navigate('/upload'))}>
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                   </svg>
                   Upload Resume
                 </label>
+                
+                {/* Create Resume Button - NEW */}
+                <button 
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition shadow-lg flex items-center justify-center"
+                  onClick={handleCreateResume}
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Don't have a resume? Create one
+                </button>
               </div>
             </div>
             <div className="flex justify-center">
@@ -146,90 +167,52 @@ const handletracker  = ()=>{
           </div>
         </div>
       </div>
-      
-      {/* Interview Preparation Section */}
-      <div className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              Ace Your Interview
-            </h2>
-            <p className="mt-4 text-xl text-gray-600">
-              Prepare for common personality development questions
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {interviewQuestions.map((question) => (
-              <div key={question.id} className="bg-blue-50 rounded-lg p-6 shadow-md hover:shadow-lg transition">
-                <h3 className="text-xl font-bold text-blue-800 mb-3">{question.question}</h3>
-                <p className="text-gray-700">{question.tips}</p>
-              </div>
-            ))}
-          </div>
-          
-          <div className="mt-10 text-center">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition">
-              View More Questions
-            </button>
-          </div>
-        </div>
-      </div>
-      
+
       {/* Body Language Section */}
-      <div className="py-16 bg-gray-50">
+      <div className="py-20 bg-gradient-to-b from-gray-50 to-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
               Master Your Body Language
             </h2>
-            <p className="mt-4 text-xl text-gray-600">
-              Non-verbal communication matters just as much as what you say
+            <p className="mt-6 text-xl text-gray-600 max-w-2xl mx-auto">
+              Non-verbal communication makes up to 93% of your message. Learn how to leverage it to your advantage.
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {bodyLanguageTips.map((tip) => (
-              <div key={tip.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
-                <img src={tip.image} alt={tip.title} className="w-full h-48 object-cover" />
+              <div key={tip.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="h-56 overflow-hidden">
+                  <img src={tip.image} alt={tip.title} className="w-full h-full object-cover" />
+                </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{tip.title}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{tip.title}</h3>
                   <p className="text-gray-700">{tip.description}</p>
+                  <div className="mt-4">
+                    <Link
+                      to={tip.path}
+                      className="flex items-center text-sm text-indigo-600 hover:text-indigo-800 transition-colors"
+                    >
+                      <span>Learn more</span>
+                      <svg className="ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
-      
-      {/* Call to Action */}
-      <div className="bg-blue-600 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-extrabold sm:text-4xl mb-6">
-            Ready to level up your career?
-          </h2>
-          <p className="text-xl max-w-3xl mx-auto mb-8">
-            Join thousands of professionals who have enhanced their interview skills and landed their dream jobs.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-           {
-            userId ? (null):(<button className="bg-white text-blue-700 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition shadow-lg">
-                Sign Up Now
-              </button>)
-           } 
-            <button className="bg-transparent hover:bg-blue-700 border-2 border-white font-bold py-3 px-8 rounded-lg transition">
-              Learn More
-            </button>
-          </div>
-        </div>
-      </div>
-      
+
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">CareerBoost</h3>
+              <h3 className="text-xl font-bold mb-4">SkillCraft</h3>
               <p className="text-gray-400">Helping you succeed in your professional journey.</p>
             </div>
             <div>
