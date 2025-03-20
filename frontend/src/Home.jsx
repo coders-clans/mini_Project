@@ -10,42 +10,42 @@ const HomePage = () => {
       id: 1,
       title: "Eye Contact Mastery",
       description: "Maintain natural eye contact to build trust and show confidence. Aim for 60-70% eye contact during conversations.",
-      image: "/images/eye-contact.jpg",
-      path: "/tips/eye-contact-mastery"
+      image: "/images/eye-contact.webp",
+      path: "https://www.verywellmind.com/understand-body-language-and-facial-expressions-4147228"
     },
     {
       id: 2,
       title: "Power Posture",
       description: "Stand tall with shoulders back and head high. Good posture signals confidence and helps you appear more authoritative.",
-      image: "/images/posture.jpg",
+      image: "/images/posture.webp",
       path: "/tips/power-posture"
     },
     {
       id: 3,
       title: "Purposeful Gestures",
       description: "Use deliberate hand movements to emphasize points. Open palms suggest honesty while pointing can appear aggressive.",
-      image: "/images/gestures.jpg",
+      image: "/images/gestures.webp",
       path: "/tips/purposeful-gestures"
     },
     {
       id: 4,
       title: "Strategic Mirroring",
       description: "Subtly match the other person's posture and gestures to build rapport. This technique creates unconscious connection.",
-      image: "/images/mirroring.jpg",
+      image: "/images/mirroring.webp",
       path: "/tips/strategic-mirroring"
     },
     {
       id: 5,
       title: "Facial Expressions",
       description: "Be mindful of your expressions as they reveal emotions. A genuine smile engages your eyes and creates instant connection.",
-      image: "/images/facial-expressions.jpg",
+      image: "/images/facial-expressions.webp",
       path: "/tips/facial-expressions"
     },
     {
       id: 6,
       title: "Proximity & Space",
       description: "Respect personal space (typically 18-24 inches). Moving closer signals intimacy, while stepping back creates psychological distance.",
-      image: "/images/proximity.jpg",
+      image: "/images/proximity.webp",
       path: "/tips/proximity-and-space"
     }
   ];
@@ -88,46 +88,125 @@ const HomePage = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
       <nav className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <span className="text-xl font-bold">SkillCraft</span>
-            </div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-4">
-              <a href="#" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition">Home</a>
-              <a href="#" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition">About</a>
-              <button onClick={handletracker} className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition">Track</button>
-              <button onClick={handleLogout} className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition">Logout</button>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden flex items-center">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md hover:bg-blue-500 focus:outline-none"
-              >
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-                </svg>
-              </button>
-            </div>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex justify-between h-16">
+      <div className="flex items-center">
+        <a href="/" className="flex items-center gap-2">
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+          <span className="text-xl font-bold">SkillCraft</span>
+        </a>
+      </div>
+      
+      {/* Desktop Navigation */}
+      <div className="hidden md:flex items-center space-x-2">
+        <a href="#" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-1">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          Home
+        </a>
+        <a href="#" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-1">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          About
+        </a>
+        <button onClick={handletracker} className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-1">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          Track
+        </button>
+        <div className="relative group">
+          <button className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-1">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            My Account
+            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+            <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500">Home</a>
-              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500">About</a>
-              <button onClick={handletracker} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500">Track</button>
-              <button onClick={handleLogout} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500">Logout</button>
-            </div>
-          </div>
-        )}
-      </nav>
+        <button className="ml-4 bg-white text-blue-600 px-4 py-1 rounded-full text-sm font-medium hover:bg-blue-100 transition duration-300">
+          Upgrade Pro
+        </button>
+      </div>
+      
+      {/* Mobile menu button */}
+      <div className="md:hidden flex items-center">
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="inline-flex items-center justify-center p-2 rounded-md hover:bg-blue-500 focus:outline-none transition duration-300"
+          aria-expanded={isMenuOpen}
+        >
+          <span className="sr-only">{isMenuOpen ? 'Close menu' : 'Open menu'}</span>
+          <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  {/* Mobile Navigation */}
+  {isMenuOpen && (
+    <div className="md:hidden">
+      <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <a href="#" className=" px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          Home
+        </a>
+        <a href="#" className=" px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          About
+        </a>
+        <button onClick={handletracker} className="w-full text-left  px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          Track
+        </button>
+        <div className="border-t border-blue-500 my-2"></div>
+        <a href="#" className=" px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          Profile
+        </a>
+        <a href="#" className=" px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Settings
+        </a>
+        <button onClick={handleLogout} className="w-full text-left  px-3 py-2 rounded-md text-base font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Logout
+        </button>
+        <div className="mt-4 px-3">
+          <button className="w-full bg-white text-blue-600 px-4 py-2 rounded-md text-base font-medium hover:bg-blue-100 transition duration-300">
+            Upgrade to Pro
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+</nav>
 
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-100 py-16">
@@ -162,7 +241,7 @@ const HomePage = () => {
               </div>
             </div>
             <div className="flex justify-center">
-              <img src="/api/placeholder/500/400" alt="Career Success" className="rounded-lg shadow-xl" />
+              <img  src="/images/career-success.png"   alt="Career Success"  className="rounded-2xl shadow-2xl border border-gray-300 p-2 bg-white"  />
             </div>
           </div>
         </div>

@@ -8,6 +8,8 @@
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.9",
+    "canvg": "^4.0.3",
+    "html2canvas": "^1.4.1",
     "jspdf": "^3.0.0",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
