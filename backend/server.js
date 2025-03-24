@@ -92,6 +92,7 @@ What is your experience with X?
 How would you handle Y in a professional setting?
 Explain the concept of Z?
 Write down the code for A.
+dont give anything else except the questions.
 `;
 
         const response = await model.generateContent(prompt);

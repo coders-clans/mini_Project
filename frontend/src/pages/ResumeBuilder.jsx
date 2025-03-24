@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {jsPDF} from 'jspdf'
-import  temp from './restemp.png'
+import  temp from '../restemp.png'
 const ResumeBuilder = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -85,7 +85,6 @@ const ResumeBuilder = () => {
     const updatedSkills = resumeData.skills.filter((_, i) => i !== index);
     setResumeData({ ...resumeData, skills: updatedSkills });
   };
-
   const generateResume = async () => {
     setLoading(true);
     try {
@@ -98,7 +97,8 @@ const ResumeBuilder = () => {
       
       // Set up dimensions
       const pageWidth = doc.internal.pageSize.getWidth();
-      const margin = 20;
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 15;
       const contentWidth = pageWidth - (margin * 2);
       
       // Helper function for text wrapping
@@ -110,200 +110,325 @@ const ResumeBuilder = () => {
         return y + (lines.length * lineHeight);
       };
       
+      // Function to check if we need a page break
+      const checkForPageBreak = (currentY, requiredSpace) => {
+        if (currentY + requiredSpace > pageHeight - margin) {
+          doc.addPage();
+          return margin;
+        }
+        return currentY;
+      };
+      
       // Set initial cursor position
       let y = margin;
       
-      // Header with name
+      // Header with name - larger, centered, and capitalized
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(24);
-      doc.text(resumeData.fullName || "Full Name", margin, y);
+      doc.setFontSize(26);
+      const fullName = (resumeData.fullName || "Full Name").toUpperCase();
+      doc.text(fullName, pageWidth / 2, y, { align: 'center' });
       y += 10;
       
-      // Contact information
+      // Contact information in a cleaner format
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
       
-      let contactText = '';
-      if (resumeData.email) contactText += `Email: ${resumeData.email}   `;
-      if (resumeData.phone) contactText += `Phone: ${resumeData.phone}   `;
-      if (resumeData.location) contactText += `Location: ${resumeData.location}   `;
-      if (resumeData.linkedIn) contactText += `LinkedIn: ${resumeData.linkedIn}   `;
-      if (resumeData.website) contactText += `Website: ${resumeData.website}`;
+      // Format contact info in two columns for better readability
+      const contactInfo = [];
+      if (resumeData.email) contactInfo.push(`Email: ${resumeData.email}`);
+      if (resumeData.phone) contactInfo.push(`Phone: ${resumeData.phone}`);
+      if (resumeData.location) contactInfo.push(`Location: ${resumeData.location}`);
+      if (resumeData.linkedIn) contactInfo.push(`LinkedIn: ${resumeData.linkedIn}`);
+      if (resumeData.website) contactInfo.push(`Website: ${resumeData.website}`);
       
-      y = addWrappedText(contactText, margin, y, contentWidth, 5);
+      // Distribute contact info in two columns
+      const columnWidth = contentWidth / 2;
+      for (let i = 0; i < contactInfo.length; i++) {
+        const colX = i % 2 === 0 ? margin : margin + columnWidth;
+        doc.text(contactInfo[i], colX, y);
+        if (i % 2 === 1 || i === contactInfo.length - 1) y += 5;
+      }
       
       // Add a dividing line
-      y += 5;
-      doc.setDrawColor(70, 70, 70);
-      doc.setLineWidth(0.5);
+      y += 3;
+      doc.setDrawColor(40, 40, 40);
+      doc.setLineWidth(0.75);
       doc.line(margin, y, pageWidth - margin, y);
-      y += 7;
+      y += 5; // Reduced spacing
       
-      // Professional Summary
+      // Professional Summary - more prominent
       if (resumeData.summary) {
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
         doc.text("PROFESSIONAL SUMMARY", margin, y);
-        y += 6;
+        y += 5; // Reduced spacing
         
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
         y = addWrappedText(resumeData.summary, margin, y, contentWidth, 5);
-        y += 10;
+        y += 6; // Reduced spacing
       }
       
-      // Education Section
+      // Experience Section - prioritized before education
       doc.setFont("helvetica", "bold");
       doc.setFontSize(14);
-      doc.text("Education", margin, y);
-      y += 6;
+      doc.text("EXPERIENCE", margin, y);
+      y += 5; // Reduced spacing
       
       doc.setFontSize(10);
-      resumeData.education.forEach(edu => {
-        doc.setFont("helvetica", "bold");
-        doc.text(edu.school || "School Name", margin, y);
-        y += 5;
+      resumeData.experience.forEach((exp, index) => {
+        // Check if we need a page break
+        y = checkForPageBreak(y, 25);
         
+        doc.setFont("helvetica", "bold");
+        doc.text(`${exp.title || "Title"}`, margin, y);
+        
+        // Company name on same line but right-aligned
+        const companyText = `${exp.company || "Company"}`;
+        const companyWidth = doc.getTextWidth(companyText);
+        doc.text(companyText, pageWidth - margin - companyWidth, y);
+        y += 4; // Reduced spacing
+        
+        // Location and date on same line
         doc.setFont("helvetica", "normal");
-        doc.text(`${edu.degree || "Degree"} in ${edu.fieldOfStudy || "Field"}`, margin, y);
-        y += 5;
+        doc.setTextColor(60, 60, 60);
+        
+        const startDate = exp.startDate ? new Date(exp.startDate).toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short'
+        }) : "Start";
+        
+        const endDate = exp.current ? "Present" : (exp.endDate ? new Date(exp.endDate).toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short'
+        }) : "End");
+        
+        const dateText = `${startDate} - ${endDate}`;
+        const dateWidth = doc.getTextWidth(dateText);
+        
+        doc.text(exp.location || "Location", margin, y);
+        doc.text(dateText, pageWidth - margin - dateWidth, y);
+        y += 4; // Reduced spacing
+        
+        // Experience bullets
+        doc.setTextColor(0, 0, 0);
+        if (exp.description) {
+          // Convert paragraph description to bullet points if needed
+          let bullets;
+          if (exp.description.includes('•')) {
+            bullets = exp.description.split('•').filter(item => item.trim() !== '');
+          } else {
+            // Split by sentences as a fallback
+            bullets = exp.description.split(/\.\s+/).filter(item => item.trim() !== '');
+          }
+          
+          bullets.forEach(bullet => {
+            if (bullet.trim()) {
+              y = checkForPageBreak(y, 10);
+              doc.text("•", margin, y);
+              y = addWrappedText(bullet.trim(), margin + 5, y, contentWidth - 5, 5);
+              y += 4; // Reduced spacing between bullet points
+            }
+          });
+        }
+        
+        // Add space between experiences
+        y += (index < resumeData.experience.length - 1) ? 3 : 6; // Reduced spacing
+      });
+      
+      // Education Section
+      y = checkForPageBreak(y, 20);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.text("EDUCATION", margin, y);
+      y += 5; // Reduced spacing
+      
+      doc.setFontSize(10);
+      resumeData.education.forEach((edu, index) => {
+        y = checkForPageBreak(y, 20);
+        
+        doc.setFont("helvetica", "bold");
+        doc.text(edu.degree || "Degree", margin, y);
+        
+        // Field of study on same line
+        if (edu.fieldOfStudy) {
+          doc.setFont("helvetica", "normal");
+          doc.text(` in ${edu.fieldOfStudy}`, margin + doc.getTextWidth(edu.degree || "Degree"), y);
+        }
+        
+        // School name right-aligned
+        const schoolText = edu.school || "School Name";
+        const schoolWidth = doc.getTextWidth(schoolText);
+        doc.setFont("helvetica", "bold");
+        doc.text(schoolText, pageWidth - margin - schoolWidth, y);
+        y += 4; // Reduced spacing
+        
+        // Dates
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(60, 60, 60);
         
         const startYear = edu.startDate ? new Date(edu.startDate).getFullYear() : "Start";
         const endYear = edu.endDate ? new Date(edu.endDate).getFullYear() : "Present";
-        doc.setTextColor(100, 100, 100);
-        doc.text(`${startYear} - ${endYear}`, margin, y);
+        const dateText = `${startYear} - ${endYear}`;
+        const dateWidth = doc.getTextWidth(dateText);
+        
+        doc.text(dateText, pageWidth - margin - dateWidth, y);
         doc.setTextColor(0, 0, 0);
-        y += 8;
+        y += (index < resumeData.education.length - 1) ? 6 : 8; // Reduced spacing
       });
       
-      // Experience Section
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(14);
-      doc.text("Experience", margin, y);
-      y += 6;
-      
-      doc.setFontSize(10);
-      resumeData.experience.forEach(exp => {
-        doc.setFont("helvetica", "bold");
-        doc.text(`${exp.title || "Title"} at ${exp.company || "Company"}`, margin, y);
-        y += 5;
-        
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(100, 100, 100);
-        doc.text(exp.location || "Location", margin, y);
-        y += 5;
-        
-        const startYear = exp.startDate ? new Date(exp.startDate).getFullYear() : "Start";
-        const endYear = exp.current ? "Present" : (exp.endDate ? new Date(exp.endDate).getFullYear() : "End");
-        doc.text(`${startYear} - ${endYear}`, margin, y);
-        y += 5;
-        
-        doc.setTextColor(0, 0, 0);
-        y = addWrappedText(exp.description || "Description", margin, y, contentWidth, 5);
-        y += 8;
-      });
-      
-      // Skills Section
+      // Skills Section - list format line by line
       if (resumeData.skills.length > 0) {
-        // Add new page if we're running out of space
-        if (y > 250) {
-          doc.addPage();
-          y = margin;
-        }
+        y = checkForPageBreak(y, 20);
         
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
-        doc.text("Skills", margin, y);
-        y += 6;
+        doc.text("SKILLS", margin, y);
+        y += 5; // Reduced spacing
         
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
         
-        const skillsText = resumeData.skills.filter(skill => skill).join(", ");
-        y = addWrappedText(skillsText, margin, y, contentWidth, 5);
-        y += 10;
+        // List skills line by line
+        const skills = resumeData.skills.filter(skill => skill);
+        
+        // Determine if we should use single line or bullet points
+        if (skills.length <= 5) {
+          // For few skills, join them with commas on a single line
+          const skillsText = skills.join(", ");
+          y = addWrappedText(skillsText, margin, y, contentWidth, 5);
+        } else {
+          // For many skills, show each on its own line with bullets
+          skills.forEach(skill => {
+            if (skill.trim()) {
+              y = checkForPageBreak(y, 5);
+              doc.text(`• ${skill.trim()}`, margin, y);
+              y += 4; // Reduced spacing between skills
+            }
+          });
+        }
+        
+        y += 4; // Reduced spacing after skills section
       }
       
       // Projects Section
       if (resumeData.projects.length > 0 && resumeData.projects[0].title) {
-        // Add new page if we're running out of space
-        if (y > 220) {
-          doc.addPage();
-          y = margin;
-        }
+        y = checkForPageBreak(y, 20);
         
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
-        doc.text("Projects", margin, y);
-        y += 6;
+        doc.text("PROJECTS", margin, y);
+        y += 5; // Reduced spacing
         
         doc.setFontSize(10);
-        resumeData.projects.forEach(project => {
+        resumeData.projects.forEach((project, index) => {
+          y = checkForPageBreak(y, 20);
+          
           doc.setFont("helvetica", "bold");
           doc.text(project.title || "Project Title", margin, y);
-          y += 5;
           
-          doc.setFont("helvetica", "normal");
-          doc.text(`Technologies: ${project.technologies || "N/A"}`, margin, y);
-          y += 5;
-          
-          if (project.link) {
-            doc.setTextColor(0, 0, 255);
-            doc.text("Project Link: " + project.link, margin, y);
+          // Add date if available
+          if (project.date) {
+            const dateText = new Date(project.date).toLocaleDateString('en-US', { 
+              year: 'numeric', 
+              month: 'short'
+            });
+            const dateWidth = doc.getTextWidth(dateText);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(60, 60, 60);
+            doc.text(dateText, pageWidth - margin - dateWidth, y);
             doc.setTextColor(0, 0, 0);
-            y += 5;
+          }
+          y += 4; // Reduced spacing
+          
+          // Technologies
+          if (project.technologies) {
+            doc.setFont("helvetica", "italic");
+            doc.text(`Technologies: ${project.technologies}`, margin, y);
+            y += 4; // Reduced spacing
           }
           
-          y = addWrappedText(project.description || "Project description", margin, y, contentWidth, 5);
-          y += 8;
+          // Project Link
+          if (project.link) {
+            doc.setTextColor(0, 0, 150);
+            const linkText = project.link.replace(/^https?:\/\//, '');
+            doc.text(linkText, margin, y);
+            doc.setTextColor(0, 0, 0);
+            y += 4; // Reduced spacing
+          }
+          
+          // Description
+          if (project.description) {
+            doc.setFont("helvetica", "normal");
+            y = addWrappedText(project.description, margin, y, contentWidth, 5);
+          }
+          
+          // Add space between projects
+          y += (index < resumeData.projects.length - 1) ? 4 : 6; // Reduced spacing
         });
       }
       
       // Certifications Section
       if (resumeData.certifications.length > 0 && resumeData.certifications[0].name) {
-        // Add new page if we're running out of space
-        if (y > 220) {
-          doc.addPage();
-          y = margin;
-        }
+        y = checkForPageBreak(y, 20);
         
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
-        doc.text("Certifications", margin, y);
-        y += 6;
+        doc.text("CERTIFICATIONS", margin, y);
+        y += 5; // Reduced spacing
         
         doc.setFontSize(10);
-        resumeData.certifications.forEach(cert => {
+        resumeData.certifications.forEach((cert, index) => {
+          y = checkForPageBreak(y, 15);
+          
           doc.setFont("helvetica", "bold");
           doc.text(cert.name || "Certification Name", margin, y);
-          y += 5;
           
+          // Add date if available
+          if (cert.date) {
+            const dateText = new Date(cert.date).toLocaleDateString('en-US', { 
+              year: 'numeric', 
+              month: 'short'
+            });
+            const dateWidth = doc.getTextWidth(dateText);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(60, 60, 60);
+            doc.text(dateText, pageWidth - margin - dateWidth, y);
+            doc.setTextColor(0, 0, 0);
+          }
+          y += 4; // Reduced spacing
+          
+          // Issuer
           doc.setFont("helvetica", "normal");
           doc.text(`Issued by ${cert.issuer || "Issuer"}`, margin, y);
-          y += 5;
+          y += 4; // Reduced spacing
           
-          if (cert.date) {
-            const formattedDate = new Date(cert.date).toLocaleDateString('en-US', { 
-              year: 'numeric', 
-              month: 'long' 
-            });
-            doc.text(formattedDate, margin, y);
-            y += 5;
-          }
-          
+          // Link
           if (cert.link) {
-            doc.setTextColor(0, 0, 255);
-            doc.text("Credential Link: " + cert.link, margin, y);
+            doc.setTextColor(0, 0, 150);
+            const linkText = cert.link.replace(/^https?:\/\//, '');
+            doc.text(linkText, margin, y);
             doc.setTextColor(0, 0, 0);
-            y += 5;
+            y += 4; // Reduced spacing
           }
           
-          y += 3;
+          // Add space between certifications
+          y += (index < resumeData.certifications.length - 1) ? 2 : 0; // Reduced spacing
         });
       }
       
-      // Save the PDF
-      doc.save(`${resumeData.fullName || "My"}_Resume.pdf`);
+      // Add page numbers
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Page ${i} of ${totalPages}`, pageWidth - margin, pageHeight - 10);
+      }
+      
+      // Save the PDF with clean filename
+      const cleanName = (resumeData.fullName || "Resume").replace(/[^a-zA-Z0-9]/g, "_");
+      doc.save(`${cleanName}_Resume.pdf`);
       
       // Navigate to homepage
       navigate('/home');
@@ -1008,7 +1133,7 @@ const renderTemplateSelection = () => (
   
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-12">
+    <div className="bg-gradient-to-br from-blue-100 to-indigo-100 min-h-screen pb-12">
       <div className="max-w-4xl mx-auto pt-8 px-4">
         <div className="bg-white shadow-md rounded-lg p-6 mb-8">
           <div className="flex items-center justify-between mb-8">

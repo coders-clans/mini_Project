@@ -97,7 +97,7 @@ const [code,setCode] = useState('//Write your code here');
       recognition.start();
     }
   };
-   const x = localStorage.getItem('daysRemaining');
+  //  const x = localStorage.getItem('daysRemaining');
   const handleTextChange = (e) => {
     setTranscriptText(e.target.value);
     onTranscriptChange(e.target.value);
@@ -121,7 +121,7 @@ const [code,setCode] = useState('//Write your code here');
             question: currentQuestion,
             answer: transcriptText + code,
             userId: localStorage.getItem('userId'),
-            x
+      
         }, {
             headers: {
                 'Content-Type': 'application/json'
@@ -157,7 +157,7 @@ const [code,setCode] = useState('//Write your code here');
  
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6">
+    <div className="h-auto bg-gradient-to-br from-gray-50 to-blue-50 p-6">
     <div className="max-w-7xl mx-auto">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">Interactive Assistant</h2>
       

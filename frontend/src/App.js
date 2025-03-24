@@ -1,13 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Upload from './components/Upload';
-import Auth from './Auth';
-import Login from './Login';
-import QuestionTracker from './QuestionTracker';
+import Auth from './pages/Auth';
+import Login from './pages/Login';
+import QuestionTracker from './pages/QuestionTracker';
 import TextSpeech from './components/Speech';
 import { Home } from 'lucide-react';
-import HomePage from './Home';
-import ResumeBuilder from './ResumeBuilder'
+import HomePage from './pages/Home';
+import ResumeBuilder from './pages/ResumeBuilder'
+import About from './pages/About';
 const App = () => {
   return (
     <Router>
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/speech" element={<TextSpeech />} />
         <Route path="/home" element={<HomePage/>} />
         <Route path="/resume-builder" element={<ResumeBuilder/>} />
+        <Route path="/about" element={<About/>} />
 
       </Routes>
     </Router>

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import Welcome from '../components/Welcome';
+import Upload from '../components/Upload';
 const HomePage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
+  const name = localStorage.getItem('name');
+  const [activeSection,setActiveSection] = useState('');
   const bodyLanguageTips = [
     {
       id: 1,
@@ -18,35 +22,35 @@ const HomePage = () => {
       title: "Power Posture",
       description: "Stand tall with shoulders back and head high. Good posture signals confidence and helps you appear more authoritative.",
       image: "/images/posture.webp",
-      path: "/tips/power-posture"
+      path: "https://www.physio-pedia.com/Posture"
     },
     {
       id: 3,
       title: "Purposeful Gestures",
       description: "Use deliberate hand movements to emphasize points. Open palms suggest honesty while pointing can appear aggressive.",
       image: "/images/gestures.webp",
-      path: "/tips/purposeful-gestures"
+      path: "https://www.scienceofpeople.com/hand-gestures/"
     },
     {
       id: 4,
       title: "Strategic Mirroring",
       description: "Subtly match the other person's posture and gestures to build rapport. This technique creates unconscious connection.",
       image: "/images/mirroring.webp",
-      path: "/tips/strategic-mirroring"
+      path: "https://childrenscommunitytherapies.uhb.nhs.uk/wp-content/uploads/Mirroring-Strategy.pdf"
     },
     {
       id: 5,
       title: "Facial Expressions",
       description: "Be mindful of your expressions as they reveal emotions. A genuine smile engages your eyes and creates instant connection.",
       image: "/images/facial-expressions.webp",
-      path: "/tips/facial-expressions"
+      path: "https://www.communicationtheory.org/importance-of-facial-expressions-in-communication/"
     },
     {
       id: 6,
       title: "Proximity & Space",
       description: "Respect personal space (typically 18-24 inches). Moving closer signals intimacy, while stepping back creates psychological distance.",
       image: "/images/proximity.webp",
-      path: "/tips/proximity-and-space"
+      path: "https://www.skillsyouneed.com/ips/body-language.html"
     }
   ];
 
@@ -68,7 +72,7 @@ const HomePage = () => {
     fetchQuestions();
   }, []);
 
-
+const newUser = localStorage.getItem('firstTime');
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("savedQuestions");
@@ -84,6 +88,13 @@ const HomePage = () => {
     navigate('/resume-builder')
   }
 
+  const render = ()=>{
+    switch (activeSection){
+      case  'upload' : return <Upload/>
+
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
@@ -91,7 +102,7 @@ const HomePage = () => {
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div className="flex justify-between h-16">
       <div className="flex items-center">
-        <a href="/" className="flex items-center gap-2">
+        <a href="/home" className="flex items-center gap-2">
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
           </svg>
@@ -107,12 +118,12 @@ const HomePage = () => {
           </svg>
           Home
         </a>
-        <a href="#" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-1">
+        <button onClick={()=>navigate('/about')} className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-1">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           About
-        </a>
+        </button>
         <button onClick={handletracker} className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-1">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -120,23 +131,15 @@ const HomePage = () => {
           Track
         </button>
         <div className="relative group">
-          <button className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-1">
+          <button className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-500 transition duration-300 flex items-center gap-1" onClick={handleLogout}>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            My Account
-            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-            </svg>
+            Logout
           </button>
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-            <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
-          </div>
         </div>
-        <button className="ml-4 bg-white text-blue-600 px-4 py-1 rounded-full text-sm font-medium hover:bg-blue-100 transition duration-300">
-          Upgrade Pro
+        <button className="ml-4 bg-white text-blue-600 px-4 py-1 rounded-full text-sm font-medium hover:bg-blue-100 transition duration-300" onClick={handleCreateResume}>
+          Start Now!
         </button>
       </div>
       
@@ -225,7 +228,7 @@ const HomePage = () => {
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                   </svg>
-                  Upload Resume
+                  Start Preparing
                 </label>
                 
                 {/* Create Resume Button - NEW */}
@@ -299,11 +302,11 @@ const HomePage = () => {
               <ul className="space-y-2">
                 <li><a href="#" className="text-gray-400 hover:text-white transition">Home</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-white transition">About</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Services</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Contact</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition">Tracker</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition">Help </a></li>
               </ul>
             </div>
-            <div>
+            {/* <div>
               <h4 className="font-bold mb-4">Resources</h4>
               <ul className="space-y-2">
                 <li><a href="#" className="text-gray-400 hover:text-white transition">Blog</a></li>
@@ -311,7 +314,7 @@ const HomePage = () => {
                 <li><a href="#" className="text-gray-400 hover:text-white transition">Resume Templates</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-white transition">Career Advice</a></li>
               </ul>
-            </div>
+            </div> */}
             <div>
               <h4 className="font-bold mb-4">Connect With Us</h4>
               <div className="flex space-x-4">
@@ -331,10 +334,10 @@ const HomePage = () => {
               <div className="mt-4">
                 <h4 className="font-bold mb-2">Subscribe to our newsletter</h4>
                 <div className="flex">
-                  <input type="email" placeholder="Your email" className="px-4 py-2 w-full rounded-l-lg text-gray-900" />
-                  <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-r-lg transition">
+                  {/* <input type="email" placeholder="Your email" className="px-4 py-2 w-full rounded-l-lg text-gray-900" /> */}
+                  {/* <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-r-lg transition">
                     Subscribe
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
@@ -344,6 +347,11 @@ const HomePage = () => {
           </div>
         </div>
       </footer>
+      {
+        newUser == 'true' ? (<div>
+          <Welcome   newUser = {newUser} username = {name}/>
+          </div>) : (null)
+      }
     </div>
   );
 };

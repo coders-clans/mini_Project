@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import TextSpeech from './components/Speech';
+import TextSpeech from '../components/Speech';
 import { useNavigate } from 'react-router-dom';
+import CongratulationsWithStyles from '../components/Congratulations';
 
 const QuestionTracker = () => {
     const [questions, setQuestions] = useState([]);
@@ -10,8 +11,8 @@ const QuestionTracker = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [answers, setAnswers] = useState({});
+    const[visible ,setVisible] = useState(false);
     const navigate = useNavigate();
-   const x = localStorage.getItem('daysRemaining');
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
@@ -91,8 +92,8 @@ const QuestionTracker = () => {
             // Remove saved questions from localStorage
             localStorage.removeItem('savedQuestions');
     
-            // Navigate to upload page
-            navigate('/upload');
+            setVisible(true)
+            // navigate('/home');
         } catch (error) {
             console.error('Error deleting questions:', error);
         }
@@ -110,7 +111,7 @@ const QuestionTracker = () => {
     if (error) return (
         <div className="flex items-center justify-center h-screen bg-gray-50">
             <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-                <div className="text-red-500 text-xl font-semibold mb-2">Error</div>
+                <div className="text-red-500 text-xl font-semibold mb-2">Start Now</div>
                 <p className="text-gray-700">{error}</p>
                 <button 
                     onClick={() => navigate('/upload')} 
@@ -278,6 +279,9 @@ const QuestionTracker = () => {
                     </div>
                 </div>
             )}
+            {
+                visible ? (<CongratulationsWithStyles/>):(null)
+            }
         </div>
     );
 };

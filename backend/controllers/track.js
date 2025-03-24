@@ -107,7 +107,7 @@ const getQuestions = async (req, res) => {
 
 const evaluateAnswer = async (req, res) => {
     try {
-        const { question, answer, userId ,x} = req.body;
+        const { question, answer, userId } = req.body;
         
         // Input validation
         if (!question || !answer || !userId) {
@@ -116,37 +116,36 @@ const evaluateAnswer = async (req, res) => {
                 error: "Question, answer and userId are required"
             });
         }
-
+        
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-
+        
         // Simplified prompt with clear structure
-        const prompt = 
-           "You are an expert interviewer evaluating my answer. " + 
-"Provide a constructive and specific evaluation based on: clarity, technical accuracy, completeness, " + 
-`professional communication, and practical understanding. The user's interview is in ${x} days.\n\n` + 
-`Question: ${question}\n` + 
-`Answer: ${answer}\n\n` + 
-"Format your response as ONLY a JSON object with these exact fields:\n" + 
-"{\n" + 
-"  \"score\": (a number between 1-10),\n" + 
-"  \"feedback\": \"overall feedback here\",\n" + 
-"  \"strengths\": \"key strengths here\",\n" + 
-"  \"improvement_areas\": \"areas to improve here\",\n" + 
-"  \"preparation_plan\": \"specific advice on how to prepare in the remaining " + x + " days before the interview\"\n" + 
-"}\n" + 
-"Ensure your response contains ONLY this JSON object with no additional text. In the preparation_plan field, provide tailored advice based on the time remaining and the specific areas that need improvement."
-
+        const prompt =
+            "You are an expert interviewer evaluating my answer. " + 
+            "Provide a constructive and specific evaluation based on: clarity, technical accuracy, completeness, " + 
+            `professional communication, and practical understanding.\n\n` + 
+            `Question: ${question}\n` + 
+            `Answer: ${answer}\n\n` + 
+            "Format your response as ONLY a JSON object with these exact fields:\n" + 
+            "{\n" + 
+            "  \"score\": (a number between 1-10, or 0 if the answer is completely inadequate),\n" + 
+            "  \"feedback\": \"overall feedback here\",\n" + 
+            "  \"strengths\": \"key strengths here\",\n" + 
+            "  \"improvement_areas\": \"areas to improve here\"\n" + // Fixed missing plus sign
+            "}\n" + 
+            "Ensure your response contains ONLY this JSON object with no additional text. If the answer is completely inadequate, give a score of 0.";
+        
         const result = await model.generateContent(prompt);
         const responseText = result.response.text();
-
+        
         // Clean the response text before parsing
         const cleanedResponse = responseText
             .trim()
             .replace(/```json\s*|\s*```/g, '') // Removing markdown code blocks
             .replace(/^\s*{\s*/, '{')  // Clean up starting brackets
             .replace(/\s*}\s*$/, '}'); // Clean up ending brackets
-
+        
         let feedback;
         try {
             feedback = JSON.parse(cleanedResponse);
@@ -158,12 +157,12 @@ const evaluateAnswer = async (req, res) => {
             if (missingFields.length > 0) {
                 throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
             }
-
-            // Validate score is a number between 1-10
-            if (typeof feedback.score !== 'number' || feedback.score < 1 || feedback.score > 10) {
-                throw new Error('Score must be a number between 1 and 10');
+            
+            // Validate score is a number between 0-10 (updated to include 0)
+            if (typeof feedback.score !== 'number' || feedback.score < 0 || feedback.score > 10) {
+                throw new Error('Score must be a number between 0 and 10');
             }
-
+        
         } catch (parseError) {
             console.error("Response parsing error:", parseError);
             console.error("Raw response:", responseText);
@@ -175,13 +174,13 @@ const evaluateAnswer = async (req, res) => {
                 details: parseError.message
             });
         }
-
+        
         // Success response
         return res.status(200).json({
             success: true,
             data: { feedback }
         });
-
+        
     } catch (error) {
         console.error("Error evaluating answer:", error);
         return res.status(500).json({
