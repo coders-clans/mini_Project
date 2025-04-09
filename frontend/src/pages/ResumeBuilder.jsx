@@ -1133,9 +1133,9 @@ const renderTemplateSelection = () => (
   
 
   return (
-    <div className="bg-gradient-to-br from-blue-100 to-indigo-100 min-h-screen pb-12">
-      <div className="max-w-4xl mx-auto pt-8 px-4">
-        <div className="bg-white shadow-md rounded-lg p-6 mb-8">
+<div className="bg-gradient-to-br from-sky-100 to-indigo-200 min-h-screen pb-12">
+<div className="max-w-4xl mx-auto pt-8 px-4">
+        <div className="bg-gradient-to-br from-white to-blue-50 shadow-lg rounded-xl p-8 mb-8 border border-blue-100/50">
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-3xl font-bold text-blue-600">Resume Builder</h1>
             <div className="text-gray-500">Step {step} of 8</div>

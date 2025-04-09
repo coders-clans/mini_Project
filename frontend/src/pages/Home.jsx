@@ -85,9 +85,12 @@ const newUser = localStorage.getItem('firstTime');
   }
 
   const handleCreateResume = () => {
-    navigate('/resume-builder')
+    // Option 1: Using window.location for full page redirect
+    window.location.href = 'http://localhost:8080/dashboard';
+  
+    // Option 2: If using React Router and you want to open in a new tab
+    window.open('http://localhost:8080/dashboard', '_blank');
   }
-
   const render = ()=>{
     switch (activeSection){
       case  'upload' : return <Upload/>

@@ -121,7 +121,7 @@ const Upload = () => {
         <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="text-center mb-8">
-                <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
                     Resume Analyzer
                 </h1>
                 <p className="mt-2 text-xl text-gray-600">Upload your resume and get personalized interview questions</p>
@@ -131,7 +131,7 @@ const Upload = () => {
             <div className="flex flex-col lg:flex-row gap-6">
                 {/* Left Column - Upload Section */}
                 <div className="lg:w-5/12 bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-500 hover:scale-[1.01]">
-                    <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 py-6 px-6">
+                    <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-6 px-6">
                         <div className="flex justify-between items-center">
                             <h2 className="text-2xl font-bold text-white flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -282,7 +282,7 @@ const Upload = () => {
                 
                 {/* Right Column - Results Section */}
                 <div className="lg:w-7/12 bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-500 hover:scale-[1.01]">
-                    <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 py-6 px-6">
+                    <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-6 px-6">
                         <div className="flex justify-between items-center">
                             <h2 className="text-2xl font-bold text-white flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -344,84 +344,86 @@ const Upload = () => {
                             </div>
                         )}
                         
-                        {/* Skills Section */}
-                        {skills && (
-                            <div className="skills-section mb-8 bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50 p-6 rounded-xl border border-indigo-100 shadow-lg transition-all duration-500 animate-fadeIn transform hover:scale-[1.01]">
-                                <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                    </svg>
-                                    Extracted Skills
-                                </h3>
-                                <div className="skills-list flex flex-wrap gap-2">
-                                    {skills.split(", ").map((skill, index) => (
-                                        <span 
-                                            key={index} 
-                                            className="skill-badge inline-block px-4 py-2 rounded-full text-sm font-medium text-white shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                                            style={{
-                                                background: `linear-gradient(135deg, ${getRandomColor(index)} 0%, ${getRandomColorShade(index)} 100%)`
-                                            }}
-                                        >
-                                            {skill}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+
+{/* Skills Section */}
+{skills && (
+    <div className="skills-section mb-8 bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-md transition-all duration-500 animate-fadeIn transform hover:scale-[1.01]">
+        <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            Skills
+        </h3>
+        <div className="skills-list flex flex-wrap gap-2">
+            {skills.split(", ").map((skill, index) => (
+                <span
+                    key={index}
+                    className="skill-badge inline-block px-4 py-2 rounded-full text-sm font-medium text-gray-700 shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                    style={{
+                        background: `linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)`,
+                        border: '1px solid #d1d5db'
+                    }}
+                >
+                    {skill}
+                </span>
+            ))}
+        </div>
+    </div>
+)}
                         
                         {/* Questions Section */}
                         {questions && !noskill && (
-                            <div className="questions-section bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50 p-6 rounded-xl border border-indigo-100 shadow-lg transition-all duration-500 animate-fadeIn">
-                                <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    Interview Questions Tailored For You
-                                </h3>
-                                <div className="space-y-4 mb-6">
-                                    {questions.split("\n").map((question, index) => (
-                                        <div 
-                                            key={index} 
-                                            className="bg-white p-5 rounded-lg border-l-4 border-purple-500 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                                        >
-                                            <div className="flex items-start">
-                                                <div className="flex-shrink-0 mr-4">
-                                                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-sm shadow-md">
-                                                        {index + 1}
-                                                    </div>
-                                                </div>
-                                                <div className="text-gray-800 font-medium">
-                                                    {question.trim()}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                
-                                <button 
-                                    className={`${saving ? 'bg-green-400 cursor-wait' : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700'} text-white py-4 px-6 rounded-lg transition-all duration-300 shadow-lg w-full flex items-center justify-center font-bold text-lg transform hover:translate-y-[-2px]`}
-                                    onClick={handleSaveQuestions}
-                                    disabled={saving}
-                                >
-                                    {saving ? (
-                                        <>
-                                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                            </svg>
-                                            Saving Questions...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
-                                            </svg>
-                                            Start Practicing Answers
-                                        </>
-                                    )}
-                                </button>
+    <div className="questions-section bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50 p-6 rounded-xl border border-indigo-100 shadow-lg transition-all duration-500 animate-fadeIn">
+        <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Interview Questions Tailored For You
+        </h3>
+        <div className="questions-scroll-container max-h-[300px] overflow-y-auto space-y-4 mb-6 pr-2">
+            {questions.split("\n").map((question, index) => (
+                <div 
+                    key={index} 
+                    className="bg-white p-5 rounded-lg border-l-4 border-purple-500 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                >
+                    <div className="flex items-start">
+                        <div className="flex-shrink-0 mr-4">
+                            <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-sm shadow-md">
+                                {index + 1}
                             </div>
-                        )}
+                        </div>
+                        <div className="text-gray-800 font-medium">
+                            {question.trim()}
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+        
+        <button 
+            className={`${saving ? 'bg-green-400 cursor-wait' : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700'} text-white py-4 px-6 rounded-lg transition-all duration-300 shadow-lg w-full flex items-center justify-center font-bold text-lg transform hover:translate-y-[-2px]`}
+            onClick={handleSaveQuestions}
+            disabled={saving}
+        >
+            {saving ? (
+                <>
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Saving Questions...
+                </>
+            ) : (
+                <>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+                    </svg>
+                    Start Practicing Answers
+                </>
+            )}
+        </button>
+    </div>
+)}
                 {/* Enhanced No Skills Message */}
                 {noskill && (
                     <div className="no-skills-message bg-amber-50 border border-amber-200 text-amber-800 px-6 py-5 rounded-lg mb-6 flex items-center shadow-md">
@@ -438,14 +440,14 @@ const Upload = () => {
                 )}
             </div>
     
-            <div className="bg-gradient-to-r from-gray-50 to-indigo-50 py-5 px-6 border-t border-indigo-100 text-center text-gray-500 text-sm">
+            {/* <div className="bg-gradient-to-r from-gray-50 to-indigo-50 py-5 px-6 border-t border-indigo-100 text-center text-gray-500 text-sm">
                 <div className="flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                     <p>Privacy Notice: Your resume data is processed securely and not stored permanently</p>
                 </div>
-            </div>
+            </div> */}
         </div>
         </div>
         </div>

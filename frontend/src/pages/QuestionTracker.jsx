@@ -111,13 +111,13 @@ const QuestionTracker = () => {
     if (error) return (
         <div className="flex items-center justify-center h-screen bg-gray-50">
             <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-                <div className="text-red-500 text-xl font-semibold mb-2">Start Now</div>
+                {/* <div className="text-red-500 text-xl font-semibold mb-2">Start Now</div> */}
                 <p className="text-gray-700">{error}</p>
                 <button 
                     onClick={() => navigate('/upload')} 
                     className="mt-6 w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition-colors"
                 >
-                    Return to Upload
+                    Start Now!
                 </button>
             </div>
         </div>
