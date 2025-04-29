@@ -9,12 +9,11 @@ const userRoutes = require('./routes/user')
 const questionRoutes = require('./routes/track')
 const app = express();
 const db = require('./db')
-app.use(cors({
-    origin: "http://localhost:3000",
-    methods: ["POST", "GET","DELETE"],
-    allowedHeaders: ["Content-Type"]
-}));
-app.use(express.json());
+require('dotenv').config();
+
+app.use(cors({ origin: process.env.frontend_url }));
+
+  app.use(express.json());
 
 // Multer storage for file uploads
 const storage = multer.memoryStorage();
@@ -144,10 +143,9 @@ app.post("/upload", upload.single("resume"), async (req, res) => {
 });
 
 
-
-
 app.use('/api/questions', questionRoutes);
 app.use("/user",userRoutes);
 // Start server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// module.exports = app;

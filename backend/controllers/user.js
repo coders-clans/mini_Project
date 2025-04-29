@@ -7,7 +7,7 @@ require('dotenv').config();
 const signUp = async (req, res) => {
     try {
         const { name, password } = req.body;
-
+    console.log(name)
         // Input validation
         if (!name || !password) {
             return res.status(400).json({

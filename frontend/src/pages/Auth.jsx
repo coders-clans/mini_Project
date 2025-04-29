@@ -42,15 +42,15 @@ const Auth = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5001/user/signUp', {
+      const response = await axios.post('https://skill-craft-backend-di79.vercel.app/user/signUp', {
         name: formData.name,
         password: formData.password,
       });
 
       if (response.data) {
-        // You might want to show a success message before redirecting
         navigate('/home');
         localStorage.setItem('firstTime' , 'true');
+        localStorage.setItem('userId',response.data._id);
       }
     } catch (error) {
       console.error('Error:', error);

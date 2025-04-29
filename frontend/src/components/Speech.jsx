@@ -117,7 +117,7 @@ const [code,setCode] = useState('//Write your code here');
     console.log(currentQuestion);
     console.log(transcriptText + code);
     try {
-        const response = await axios.post('http://localhost:5001/api/questions/submit-answer', {
+        const response = await axios.post('https://skill-craft-backend-di79.vercel.app/api/questions/submit-answer', {
             question: currentQuestion,
             answer: transcriptText + code,
             userId: localStorage.getItem('userId'),
