@@ -42,7 +42,7 @@ const Auth = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('https://skill-craft-backend-di79.vercel.app/user/signUp', {
+      const response = await axios.post('https://localhost:3000/user/signUp', {
         name: formData.name,
         password: formData.password,
       });

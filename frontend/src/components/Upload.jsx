@@ -54,7 +54,7 @@ const Upload = () => {
         formData.append("resume", file);
 
         try {
-            const response = await axios.post("https://skill-craft-backend-di79.vercel.app/upload", formData, {
+            const response = await axios.post("https://localhost:3000/upload", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -82,7 +82,7 @@ const Upload = () => {
 
         setSaving(true);
         try {
-            const response = await axios.post('https://skill-craft-backend-di79.vercel.app/api/questions/save', {
+            const response = await axios.post('https://localhost:3000/api/questions/save', {
                 userId,
                 questions,
                 daysUntilInterview // Include interview countdown when saving
